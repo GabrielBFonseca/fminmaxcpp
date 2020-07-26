@@ -4,6 +4,7 @@
 #include "higra/accumulator/tree_accumulator.hpp"
 #include "higra/attribute/tree_attribute.hpp"
 #include <limits>
+#include <math.h>
 
 #define FORCE_IMPORT_ARRAY
 #include "xtensor-python/pyarray.hpp"
@@ -29,21 +30,15 @@ auto fminmax_idx(const hg::tree & tree, const xt::pyarray<double> & altitudes, c
     xt::pyarray<double> pass_edge_weight = xt::pyarray<double>::from_shape({hg::num_vertices(tree)});
 	fmm_distances[hg::root(tree)] = std::numeric_limits<double>::infinity();
 
-    //When using the code below everything works fine.
-    /*
-    xt::pyarray<hg::index_t> min_alpha_idx = xt::ones<hg::index_t>({hg::num_vertices(tree)});
-    min_alpha_idx *= -1;
-    for(hg::index_t i = 0;i<hg::num_leaves(tree);i++){
-        min_alpha_idx[i] = i;
-    }
-    */
+
 	xt::pyarray<hg::index_t> min_alpha_idx = xt::pyarray<hg::index_t>::from_shape({hg::num_vertices(tree)});
     //The following 2 lined return an error on my code
     xt::view(min_alpha_idx, xt::range(hg::num_leaves(tree), hg::num_vertices(tree))) = -1;
     xt::view(min_alpha_idx, xt::range(0, hg::num_leaves(tree))) = xt::arange<hg::index_t>(0, hg::num_leaves(tree));
 
     //transform marker and comput min in each region (min(alpha(f(x)))
-    xt::pyarray<double> alpha_marker = (1 + 1e-9)/(marker + 1e-9);
+    //xt::pyarray<double> alpha_marker = (1 + 1e-9)/(marker + 1e-9);
+    xt::pyarray<double> alpha_marker = exp(1-marker);
     auto min_alpha_marker = hg::accumulate_sequential(tree, alpha_marker, hg::accumulator_min());
     auto sibling = hg::attribute_sibling(tree);
 

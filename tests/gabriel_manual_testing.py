@@ -4,7 +4,7 @@ import numpy as np
 import higra as hg
 import time
 
-def fminmax_indx(tree, altitudes, marker, alpha=lambda x: (1+ 1e-9)/(x + 1e-9)):
+def fminmax_indx(tree, altitudes, marker, alpha=lambda x: np.exp(1-x)):
     """
     Calculate the fminmax distance between a tree and a marker, and returns
     the fminmax distances and the closest vertex for all nodes on the tree.
@@ -61,6 +61,7 @@ for i in range(10):
     num_seeds = 60
     g = hg.get_4_adjacency_graph((s,s))
     tree, altitudes = hg.bpt_canonical(g, np.random.rand(g.num_edges()))
+    altitudes = altitudes/np.max(altitudes)
     markers = np.random.rand(g.num_vertices())
     non_zero_markers = np.random.choice(np.arange(g.num_vertices()), num_seeds, replace=False)
     non_zero_obj = non_zero_markers[:num_seeds//2]
