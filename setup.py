@@ -70,7 +70,7 @@ class CMakeBuild(build_ext):
 setup(
     name='fminmax',
     author='Gabriel Fonseca',
-    version='0.0.2',
+    version='0.0.3',
     description='An example higra extension',
     long_description=open('README.md').read(),
     ext_modules=[CMakeExtension('fminmax')],

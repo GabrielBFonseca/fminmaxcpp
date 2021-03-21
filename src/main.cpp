@@ -46,7 +46,8 @@ auto fminmax_idx(const hg::tree & tree, const xt::pyarray<double> & altitudes, c
     auto max_mu = hg::accumulate_sequential(tree, marker, hg::accumulator_max());
     auto min_alpha_marker = hg::accumulate_sequential(tree, alpha_marker, hg::accumulator_min());
     auto sibling = hg::attribute_sibling(tree);
-
+    //Compute children explicitly
+    //tree.compute_children();
 	auto & parents = tree.parents();
     //calculate min_alpha indexes
     for(auto n: leaves_to_root_iterator(tree, hg::leaves_it::exclude,hg::root_it::include)){
